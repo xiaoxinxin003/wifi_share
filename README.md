@@ -5,7 +5,6 @@
 * 添加android与pc之间的文件传输，通过在android设备中实现http server来完成（这样不需要在pc中安装应用，只需要浏览器就可以方便完成操作）
 
 
-
 ## 实现原理：
 * 设备发现：通过udp向255.255.255.255发送广播包  
 * 文件传输：通过NIO socket。
@@ -32,5 +31,3 @@
 * compile project(':p2pmanager')
 * compile project(':httpServer') 作者[本人](https://github.com/gpfduoduo/HttpServerOnAndroid/)
 
-## 感谢
-杨蔚 及其 儿子 

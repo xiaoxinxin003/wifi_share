@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AnyShareOfAndroid-master.iml" filepath="$PROJECT_DIR$/AnyShareOfAndroid-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/RadarScanView/RadarScanView.iml" filepath="$PROJECT_DIR$/RadarScanView/RadarScanView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/httpServer/httpServer.iml" filepath="$PROJECT_DIR$/httpServer/httpServer.iml" />
@@ -10,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/randomtextview/randomtextview.iml" filepath="$PROJECT_DIR$/randomtextview/randomtextview.iml" />
       <module fileurl="file://$PROJECT_DIR$/rippleoutlayout/rippleoutlayout.iml" filepath="$PROJECT_DIR$/rippleoutlayout/rippleoutlayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/rippleview/rippleview.iml" filepath="$PROJECT_DIR$/rippleview/rippleview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wifi_share.iml" filepath="$PROJECT_DIR$/wifi_share.iml" />
     </modules>
   </component>
 </project>
