@@ -23,9 +23,7 @@ import com.guo.duoduo.p2pmanager.p2pentity.P2PFileInfo;
 /**
  * Created by zeus on 2016/9/16.
  */
-public class ImageSelectAdapter
-    extends
-        RecyclerView.Adapter<ImageSelectAdapter.MyViewHolder>
+public class ImageSelectAdapter extends RecyclerView.Adapter<ImageSelectAdapter.MyViewHolder>
 {
 
     private static final String tag = ImageSelectAdapter.class.getSimpleName();

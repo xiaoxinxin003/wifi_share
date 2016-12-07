@@ -2,6 +2,7 @@
     <string name="app_name">闪电传</string>
     <string name="menu_about">关于</string>
     <string name="menu_history">接收目录</string>
+    <string name="menu_guys">我的小伙伴</string>
 
     <string name="setting_illustrate">点解设置查看具体使用说明</string>
     <string name="setting_action">设置</string>
