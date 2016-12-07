@@ -136,7 +136,9 @@ public class ReceiveActivity extends BaseActivity
 
 //        intWifiHotSpot();
 
-        connectToHotSpot();
+//        connectToHotSpot();
+
+        connectToHotpot();
 
         //TODO 连接到正确的热点后再开始初始化。
         initP2P();
