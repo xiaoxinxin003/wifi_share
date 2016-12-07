@@ -16,7 +16,7 @@ public class P2PConstant
 
     public static final String MULTI_ADDRESS = "255.255.255.255";
 
-    public static final String FILE_SHARE_SAVE_PATH = "西瓜快传";
+    public static final String FILE_SHARE_SAVE_PATH = "god_share";
 
     public static final int MAXIMUM_POOL_SIZE = 4;
 
