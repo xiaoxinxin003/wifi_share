@@ -4,7 +4,9 @@ package com.guo.duoduo.anyshareofandroid.ui.transfer;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,12 +18,14 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.guo.duoduo.anyshareofandroid.R;
+import com.guo.duoduo.anyshareofandroid.manager.CustomWifiManager;
 import com.guo.duoduo.anyshareofandroid.sdk.cache.Cache;
 import com.guo.duoduo.anyshareofandroid.ui.common.BaseActivity;
 import com.guo.duoduo.anyshareofandroid.ui.transfer.fragment.AppFragment;
 import com.guo.duoduo.anyshareofandroid.ui.common.FragmentAdapter;
 import com.guo.duoduo.anyshareofandroid.ui.transfer.fragment.OnSelectItemClickListener;
 import com.guo.duoduo.anyshareofandroid.ui.transfer.fragment.PictureFragment;
+import com.guo.duoduo.anyshareofandroid.utils.NetworkUtils;
 import com.guo.duoduo.anyshareofandroid.utils.ToastUtils;
 
 
@@ -30,11 +34,11 @@ import com.guo.duoduo.anyshareofandroid.utils.ToastUtils;
  */
 public class FileSelectActivity extends BaseActivity implements OnSelectItemClickListener
 {
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
     private String userName = Build.DEVICE;
     private Toolbar toolbar;
     private String title;
+
+    private WifiManager mWifiManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,6 +46,9 @@ public class FileSelectActivity extends BaseActivity implements OnSelectItemClic
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_file);
+
+        mWifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+
         toolbar = (Toolbar) findViewById(R.id.activity_file_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -64,8 +71,7 @@ public class FileSelectActivity extends BaseActivity implements OnSelectItemClic
             public void onClick(View view)
             {
                 if (Cache.selectedList.size() > 0)
-                    startActivity(new Intent(FileSelectActivity.this,
-                        RadarScanActivity.class).putExtra("name", userName));
+                    onSendFileBtnClick();
                 else
                     ToastUtils.showTextToast(getApplicationContext(),
                         getString(R.string.please_select_file));
@@ -76,11 +82,11 @@ public class FileSelectActivity extends BaseActivity implements OnSelectItemClic
         titles.add(getString(R.string.app));
         titles.add(getString(R.string.picture));
 
-        tabLayout = (TabLayout) findViewById(R.id.activity_file_tabLayout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_file_tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(titles.get(0)));
         tabLayout.addTab(tabLayout.newTab().setText(titles.get(1)));
 
-        viewPager = (ViewPager) findViewById(R.id.activity_file_viewpager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.activity_file_viewpager);
         List<android.support.v4.app.Fragment> fragments = new ArrayList<>();
         fragments.add(new AppFragment());
         fragments.add(new PictureFragment());
@@ -91,6 +97,22 @@ public class FileSelectActivity extends BaseActivity implements OnSelectItemClic
 
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabsFromPagerAdapter(adapter);
+    }
+
+    private void onSendFileBtnClick() {
+        //TODO 是否已经在可用热点中，是的话扫描就直接显示、发送，否则创建热点。
+        if (NetworkUtils.isWifiConnected(this)){
+            if (mWifiManager.getConnectionInfo().getBSSID().startsWith("闪电")){
+                //直接扫描就可以了
+            }else {
+                mWifiManager.setWifiEnabled(false);
+                CustomWifiManager.getInstance().setWifiApEnabled(mWifiManager, true);
+            }
+        }else{
+            CustomWifiManager.getInstance().setWifiApEnabled(mWifiManager, true);
+        }
+        startActivity(new Intent(FileSelectActivity.this,
+                RadarScanActivity.class).putExtra("name", userName));
     }
 
     @Override

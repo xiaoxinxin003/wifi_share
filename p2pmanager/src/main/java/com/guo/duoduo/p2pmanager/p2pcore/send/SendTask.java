@@ -27,19 +27,17 @@ public class SendTask extends OneByOneRunnable
     public final static int TRANS_START = 1;
     public final static int TRANS_OVER = 2;
 
-    Sender sender;
-    SocketChannel socketChannel; //与客户端通信的通道
-    MelonHandler p2PHandler;
-    P2PNeighbor neighbor;
-    SocketTransInfo socketTransInfo;
-    P2PFileInfo p2PFileInfo;
-    long lastTransferred;
-    int step;
-    RandomAccessFile randomAccessFile = null;
-    FileChannel fileChannel;
-    MappedByteBuffer mappedByteBuffer = null;
-    Thread thread;
-    boolean idle;
+    private Sender sender;
+    private SocketChannel socketChannel; //与客户端通信的通道
+    private MelonHandler p2PHandler;
+    private P2PNeighbor neighbor;
+    private SocketTransInfo socketTransInfo;
+    private long lastTransferred;
+    private int step;
+    private RandomAccessFile randomAccessFile = null;
+    private FileChannel fileChannel;
+    private MappedByteBuffer mappedByteBuffer = null;
+    private Thread thread;
     boolean finished = false;
 
     public SendTask(Sender sender, SocketChannel socketChannel)
@@ -58,7 +56,7 @@ public class SendTask extends OneByOneRunnable
         thread = Thread.currentThread();
 
         int len = 0;
-        idle = false;
+        boolean idle = false;
 
         while (!idle)
         {
@@ -118,7 +116,7 @@ public class SendTask extends OneByOneRunnable
         Log.d(tag, "send task prepare function");
 
         socketTransInfo = new SocketTransInfo(sender.index);
-        p2PFileInfo = sender.files[sender.index];
+        P2PFileInfo p2PFileInfo = sender.files[sender.index];
         p2PFileInfo.LengthNeeded = p2PFileInfo.size;
         socketTransInfo.Length = p2PFileInfo.size;
         socketTransInfo.Offset = 0;

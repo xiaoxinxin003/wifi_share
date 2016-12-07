@@ -2,9 +2,17 @@ package com.guo.duoduo.anyshareofandroid.ui.transfer;
 
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -46,6 +54,13 @@ public class ReceiveActivity extends BaseActivity
 
     private static final String tag = ReceiveActivity.class.getSimpleName();
 
+    private WifiManager mWifiManager;
+    private WifiReceiver mWifiReceiver;
+
+    private List<ScanResult> mWifiList;
+    private boolean mIsConnected=false;
+    private List<String> mPassableHotsPot;
+
     private AccessPointManager mWifiApManager = null;
     private Random random = new Random();
     private CommonProgressDialog progressDialog;
@@ -54,7 +69,7 @@ public class ReceiveActivity extends BaseActivity
     private RippleOutLayout rippleOutLayout;
     private RandomTextView randomTextView;
 
-    private P2PManager p2PManager;
+    private P2PManager mP2PManager;
     private String alias;
 
     private RelativeLayout receiveLayout;
@@ -66,6 +81,8 @@ public class ReceiveActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
+
+        init();
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_receive_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -95,12 +112,42 @@ public class ReceiveActivity extends BaseActivity
         Intent intent = getIntent();
         if (intent != null)
         {
-
             alias = intent.getStringExtra("name");
         }
         else
             alias = Build.DEVICE;
 
+        initView();
+
+        registReceiver();
+
+//        if (!NetworkUtils.isWifiConnected(MyApplication.getInstance()))
+//        { //create wifi hot spot
+//            Log.d(tag, "no WiFi init wifi hotspot");
+//            intWifiHotSpot();
+//        }
+//        else
+//        {
+//            Log.d(tag, "useWiFi");
+//            wifiName.setText(String.format(getString(R.string.send_connect_to),
+//                NetworkUtils.getCurrentSSID(ReceiveActivity.this)));
+//        }
+
+
+//        intWifiHotSpot();
+
+        connectToHotSpot();
+
+        //TODO 连接到正确的热点后再开始初始化。
+        initP2P();
+    }
+
+    private void init() {
+        mWifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager.startScan();
+    }
+
+    private void initView() {
         TextView radar_scan_name = (TextView) findViewById(R.id.activity_receive_scan_name);
         radar_scan_name.setText(alias);
 
@@ -123,34 +170,89 @@ public class ReceiveActivity extends BaseActivity
                     public void onRippleViewClicked(View view)
                     {
                         //接受了对方的发送请求
-                        p2PManager.ackReceive();
+                        mP2PManager.ackReceive();
                         receiveLayout.setVisibility(View.GONE);
                         receiveListView.setVisibility(View.VISIBLE);
                     }
                 });
+    }
 
-//        if (!NetworkUtils.isWifiConnected(MyApplication.getInstance()))
-//        { //create wifi hot spot
-//            Log.d(tag, "no WiFi init wifi hotspot");
-//            intWifiHotSpot();
-//        }
-//        else
-//        {
-//            Log.d(tag, "useWiFi");
-//            wifiName.setText(String.format(getString(R.string.send_connect_to),
-//                NetworkUtils.getCurrentSSID(ReceiveActivity.this)));
-//        }
+    private void registReceiver() {
+        // 注册Receiver
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(mWifiReceiver, filter);
+    }
 
+    /* 监听热点变化 */
+    private final class WifiReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mWifiList = mWifiManager.getScanResults();
+            if (mWifiList == null || mWifiList.size() == 0 || mIsConnected)
+                return;
+            onReceiveNewNetworks(mWifiList);
+        }
+    }
 
-        intWifiHotSpot();
+    /*当搜索到新的wifi热点时判断该热点是否符合规格*/
+    public void onReceiveNewNetworks(List<ScanResult> wifiList){
+        mPassableHotsPot =new ArrayList<String>();
+        for(ScanResult result:wifiList){
+            System.out.println(result.SSID);
+            if((result.SSID).contains("YRCCONNECTION"))
+                mPassableHotsPot.add(result.SSID);
+        }
+        synchronized (this) {
+            connectToHotpot();
+//            showWifiAp(mPassableHotsPot);
+        }
+    }
 
+    private void showWifiAp(List<String> mPassableHotsPot) {
+        //TODO 获取附近的小伙伴。
 
-        initP2P();
+    }
+
+    /*连接到热点*/
+    public void connectToHotpot(){
+        if(mPassableHotsPot ==null || mPassableHotsPot.size()==0)
+            return;
+        WifiConfiguration wifiConfig=this.setWifiParams(mPassableHotsPot.get(0));
+        int wcgID = mWifiManager.addNetwork(wifiConfig);
+        // 网络连接列表
+        boolean flag=mWifiManager.enableNetwork(wcgID, true);
+        if (!mPassableHotsPot.contains("YRCCONNECTION")){
+            mWifiManager.disconnect();
+            mWifiManager.enableNetwork(wcgID, true);
+            mWifiManager.saveConfiguration();
+            mWifiManager.reconnect();
+        }
+        String currentBssid = mWifiManager.getConnectionInfo().getBSSID();
+        if (currentBssid != null && currentBssid.contains("YRCCONNECTION")){
+            mIsConnected = true;
+            initP2P();
+        }
+        System.out.println("connect success? "+mIsConnected);
+    }
+
+    private void connectToHotSpot() {
+        if (NetworkUtils.isWifiConnected(this)){
+            if (mWifiManager.getConnectionInfo().getSSID().contains("闪电")){
+                //不需要操作，
+
+            }else {
+                mWifiManager.disconnect();
+
+            }
+        }else {
+
+        }
     }
 
     private void initP2P()
     {
-        p2PManager = new P2PManager(getApplicationContext());
+        mP2PManager = new P2PManager(getApplicationContext());
         P2PNeighbor melonInfo = new P2PNeighbor();
         melonInfo.alias = alias;
         String ip = null;
@@ -166,7 +268,7 @@ public class ReceiveActivity extends BaseActivity
             ip = NetworkUtils.getLocalIp(getApplicationContext());
         melonInfo.ip = ip;
 
-        p2PManager.start(melonInfo, new Melon_Callback()
+        mP2PManager.start(melonInfo, new Melon_Callback()
         {
             @Override
             public void Melon_Found(P2PNeighbor melon)
@@ -179,7 +281,7 @@ public class ReceiveActivity extends BaseActivity
             }
         });
 
-        p2PManager.receiveFile(new ReceiveFile_Callback()
+        mP2PManager.receiveFile(new ReceiveFile_Callback()
         {
             @Override
             public boolean QueryReceiving(P2PNeighbor src, P2PFileInfo[] files)
@@ -251,6 +353,22 @@ public class ReceiveActivity extends BaseActivity
         });
     }
 
+    /*设置要连接的热点的参数*/
+    private WifiConfiguration setWifiParams(String ssid){
+        WifiConfiguration apConfig = new WifiConfiguration();
+        apConfig.SSID="\""+ssid+"\"";
+        apConfig.preSharedKey="\"12122112\"";
+        apConfig.hiddenSSID = true;
+//        apConfig.status = WifiConfiguration.Status.ENABLED;
+//        apConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+//        apConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+//        apConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+//        apConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+//        apConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+//        apConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+        return apConfig;
+    }
+
     @Override
     protected void onDestroy()
     {
@@ -260,13 +378,18 @@ public class ReceiveActivity extends BaseActivity
         if (rippleOutLayout != null)
             rippleOutLayout.stopRippleAnimation();
 
-        if (p2PManager != null)
+        if (mP2PManager != null)
         {
-            p2PManager.cancelReceive();
-            p2PManager.stop();
+            mP2PManager.cancelReceive();
+            mP2PManager.stop();
         }
 
         Cache.selectedList.clear();
+
+        if (mWifiReceiver != null){
+            unregisterReceiver(mWifiReceiver);
+        }
+
     }
 
     private void intWifiHotSpot()

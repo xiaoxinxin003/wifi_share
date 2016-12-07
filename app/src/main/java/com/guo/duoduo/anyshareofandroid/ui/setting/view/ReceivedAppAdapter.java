@@ -52,7 +52,11 @@ public class ReceivedAppAdapter extends RecyclerView.Adapter<ReceivedAppAdapter.
         if (app == null)
             return;
 
-        holder.mIcon.setImageBitmap(((BitmapDrawable) app.getFileIcon()).getBitmap());
+        if (app.getFileIcon() != null){
+            holder.mIcon.setImageBitmap(((BitmapDrawable) app.getFileIcon()).getBitmap());
+        }else{
+            //TODO 设置默认图
+        }
         holder.mName.setText(app.getFileName());
         holder.mSize.setText(app.getFileSize());
 

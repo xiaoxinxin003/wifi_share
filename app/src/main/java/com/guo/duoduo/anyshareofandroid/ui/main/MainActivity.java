@@ -1,7 +1,9 @@
 package com.guo.duoduo.anyshareofandroid.ui.main;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,7 @@ import com.guo.duoduo.httpserver.ui.Send2PCActivity;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
 
+//    private WifiManager mWifiManager;
     private EditText nameEdit;
 
     @Override
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
 
