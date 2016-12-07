@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/11.
+ * Created by zeus on 2016/9/11.
  */
 public class MyApplication extends Application
 {

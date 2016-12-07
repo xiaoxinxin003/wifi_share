@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * Created by Guo.Duo duo on 2015/9/5.
+ * Created by Guo.Duo duo on 2016/9/5.
  */
 public class SdFileCache
 {

@@ -17,7 +17,7 @@ import android.net.wifi.WifiManager;
 
 
 /**
- * Created by 郭攀峰 on 2015/8/24.
+ * Created by zeus on 2016/8/24.
  */
 public class NetworkUtils
 {

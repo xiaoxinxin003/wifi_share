@@ -10,7 +10,7 @@ import com.guo.duoduo.p2pmanager.p2pentity.P2PNeighbor;
 import com.guo.duoduo.p2pmanager.p2pentity.param.ParamIPMsg;
 
 /**
- * Created by 郭攀峰 on 2015/9/21.
+ * Created by zeus on 2016/9/21.
  */
 public class Receiver
 {

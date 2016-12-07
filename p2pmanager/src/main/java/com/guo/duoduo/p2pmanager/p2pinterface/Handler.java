@@ -6,7 +6,7 @@ import java.nio.channels.SelectionKey;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/22.
+ * Created by zeus on 2016/9/22.
  * 处理NIO client与server交互
  */
 public interface Handler

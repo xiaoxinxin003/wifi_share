@@ -7,7 +7,7 @@ import java.io.File;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/16.
+ * Created by zeus on 2016/9/16.
  * android设备中的文件
  */
 public class P2PFileInfo

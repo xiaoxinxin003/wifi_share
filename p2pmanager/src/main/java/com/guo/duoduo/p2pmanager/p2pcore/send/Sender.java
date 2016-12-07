@@ -12,7 +12,7 @@ import com.guo.duoduo.p2pmanager.p2pentity.param.ParamTCPNotify;
 import java.util.ArrayList;
 
 /**
- * Created by 郭攀峰 on 2015/9/20.
+ * Created by zeus on 2016/9/20.
  */
 public class Sender
 {

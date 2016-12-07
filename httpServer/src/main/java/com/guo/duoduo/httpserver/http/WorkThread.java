@@ -11,7 +11,7 @@ import org.apache.http.protocol.HttpService;
 
 
 /**
- * Created by Guo.Duo duo on 2015/9/5.
+ * Created by Guo.Duo duo on 2016/9/5.
  */
 public class WorkThread extends Thread
 {

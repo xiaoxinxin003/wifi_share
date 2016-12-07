@@ -18,7 +18,7 @@ import com.guo.duoduo.p2pmanager.p2ptimer.Timeout;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/19.
+ * Created by zeus on 2016/9/19.
  * 所有的message中转的handler，可以接受来自UI或者thread的message，也可以转发message到UI
  */
 public class MelonHandler extends Handler

@@ -9,7 +9,7 @@ import com.guo.duoduo.p2pmanager.p2pentity.param.ParamIPMsg;
 import com.guo.duoduo.p2pmanager.p2pentity.param.ParamReceiveFiles;
 
 /**
- * Created by 郭攀峰 on 2015/9/20.
+ * Created by zeus on 2016/9/20.
  */
 public class ReceiveManager
 {

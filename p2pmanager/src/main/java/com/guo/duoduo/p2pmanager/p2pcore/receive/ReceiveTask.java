@@ -17,7 +17,7 @@ import com.guo.duoduo.p2pmanager.p2pcore.P2PManager;
 import com.guo.duoduo.p2pmanager.p2pentity.P2PFileInfo;
 
 /**
- * Created by 郭攀峰 on 2015/9/21.
+ * Created by zeus on 2016/9/21.
  * 接收端的线程实现
  */
 public class ReceiveTask extends Thread

@@ -5,7 +5,7 @@ import android.os.Handler;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/19.
+ * Created by zeus on 2016/9/19.
  * 一个通用的定时器
  */
 public class OSTimer implements Runnable

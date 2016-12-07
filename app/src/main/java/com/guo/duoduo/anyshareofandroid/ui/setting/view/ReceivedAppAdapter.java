@@ -22,7 +22,7 @@ import com.guo.duoduo.anyshareofandroid.ui.uientity.IInfo;
 
 
 /**
- * Created by 郭攀峰 on 2015/10/11.
+ * Created by zeus on 2016/10/11.
  */
 public class ReceivedAppAdapter extends RecyclerView.Adapter<ReceivedAppAdapter.MyHolder>
 {

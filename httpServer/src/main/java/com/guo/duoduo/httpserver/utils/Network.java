@@ -7,7 +7,7 @@ import android.net.wifi.WifiManager;
 
 
 /**
- * Created by Guo.Duo duo on 2015/9/4.
+ * Created by Guo.Duo duo on 2016/9/4.
  */
 public class Network
 {

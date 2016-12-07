@@ -4,7 +4,7 @@ package com.guo.duoduo.anyshareofandroid.ui.uientity;
 import android.graphics.drawable.Drawable;
 
 /**
- * Created by 郭攀峰 on 2015/9/16.
+ * Created by zeus on 2016/9/16.
  */
 public interface IInfo
 {

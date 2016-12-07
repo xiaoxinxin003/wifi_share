@@ -7,7 +7,7 @@ import com.guo.duoduo.p2pmanager.p2pconstant.P2PConstant;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/15.
+ * Created by zeus.
  */
 public class AppInfo implements IInfo
 {

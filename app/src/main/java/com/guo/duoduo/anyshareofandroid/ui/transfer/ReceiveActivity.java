@@ -129,17 +129,21 @@ public class ReceiveActivity extends BaseActivity
                     }
                 });
 
-        if (!NetworkUtils.isWifiConnected(MyApplication.getInstance()))
-        { //create wifi hot spot
-            Log.d(tag, "no WiFi init wifi hotspot");
-            intWifiHotSpot();
-        }
-        else
-        {
-            Log.d(tag, "useWiFi");
-            wifiName.setText(String.format(getString(R.string.send_connect_to),
-                NetworkUtils.getCurrentSSID(ReceiveActivity.this)));
-        }
+//        if (!NetworkUtils.isWifiConnected(MyApplication.getInstance()))
+//        { //create wifi hot spot
+//            Log.d(tag, "no WiFi init wifi hotspot");
+//            intWifiHotSpot();
+//        }
+//        else
+//        {
+//            Log.d(tag, "useWiFi");
+//            wifiName.setText(String.format(getString(R.string.send_connect_to),
+//                NetworkUtils.getCurrentSSID(ReceiveActivity.this)));
+//        }
+
+
+        intWifiHotSpot();
+
 
         initP2P();
     }

@@ -39,7 +39,7 @@ import com.guo.duoduo.rippleoutview.RippleView;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/12.
+ * Created by zeus on 2016/9/12.
  */
 public class RadarScanActivity extends BaseActivity
 {

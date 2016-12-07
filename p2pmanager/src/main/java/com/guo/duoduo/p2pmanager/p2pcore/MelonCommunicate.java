@@ -26,7 +26,7 @@ import com.guo.duoduo.p2pmanager.p2pentity.param.ParamIPMsg;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/19. 接收端和发送端的udp交互
+ * Created by zeus on 2016/9/19. 接收端和发送端的udp交互
  */
 public class MelonCommunicate extends Thread
 {

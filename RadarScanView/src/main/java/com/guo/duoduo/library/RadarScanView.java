@@ -16,7 +16,7 @@ import android.view.View;
 
 
 /**
- * Created by 郭攀峰 on 2015/8/19.
+ * Created by zeus on 2016/8/19.
  */
 public class RadarScanView extends View
 {

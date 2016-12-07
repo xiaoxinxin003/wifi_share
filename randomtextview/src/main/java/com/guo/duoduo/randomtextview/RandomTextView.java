@@ -19,7 +19,7 @@ import com.guo.duoduo.rippleoutview.RippleView;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/17.
+ * Created by zeus on 2016/9/17.
  */
 public class RandomTextView extends FrameLayout
     implements

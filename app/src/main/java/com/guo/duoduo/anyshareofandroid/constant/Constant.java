@@ -6,7 +6,7 @@ import com.guo.duoduo.anyshareofandroid.R;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/15.
+ * Created by zeus.
  */
 public class Constant
 {

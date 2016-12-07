@@ -27,7 +27,7 @@ import com.guo.duoduo.p2pmanager.p2pinterface.SendFile_Callback;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/17.
+ * Created by zeus on 2016/9/17.
  */
 public class P2PManager
 {

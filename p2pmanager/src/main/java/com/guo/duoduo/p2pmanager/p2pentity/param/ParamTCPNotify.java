@@ -4,7 +4,7 @@ package com.guo.duoduo.p2pmanager.p2pentity.param;
 import com.guo.duoduo.p2pmanager.p2pentity.P2PNeighbor;
 
 /**
- * Created by 郭攀峰 on 2015/9/22.
+ * Created by zeus on 2016/9/22.
  */
 public class ParamTCPNotify
 {

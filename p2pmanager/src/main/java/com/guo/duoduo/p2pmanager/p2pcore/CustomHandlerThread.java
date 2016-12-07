@@ -11,7 +11,7 @@ import android.os.Process;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/19.
+ * Created by zeus on 2016/9/19.
  * 自定义的HandlerThread
  */
 public class CustomHandlerThread extends Thread

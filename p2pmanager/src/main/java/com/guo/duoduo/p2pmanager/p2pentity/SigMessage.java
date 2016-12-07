@@ -7,7 +7,7 @@ import java.util.Date;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/17.
+ * Created by zeus on 2016/9/17.
  * 局域网用户之间的upd消息
  */
 public class SigMessage

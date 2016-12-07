@@ -18,7 +18,7 @@ import com.guo.duoduo.p2pmanager.p2pentity.SocketTransInfo;
 import com.guo.duoduo.p2pmanager.p2pentity.param.ParamTCPNotify;
 
 /**
- * Created by 郭攀峰 on 2015/9/22.
+ * Created by zeus on 2016/9/22.
  */
 public class SendTask extends OneByOneRunnable
 {

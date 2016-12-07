@@ -15,7 +15,7 @@ import com.guo.duoduo.p2pmanager.p2pinterface.Handler;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/21.
+ * Created by zeus on 2016/9/21.
  */
 public class SendServer extends Thread
 {

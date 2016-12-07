@@ -26,7 +26,7 @@ import com.guo.duoduo.httpserver.utils.Constant;
 
 
 /**
- * Created by Guo.Duo duo on 2015/9/5.
+ * Created by Guo.Duo duo on 2016/9/5.
  */
 public class RequestListenerThread extends Thread
 {

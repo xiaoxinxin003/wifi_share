@@ -21,7 +21,7 @@ import com.guo.duoduo.p2pmanager.p2pentity.P2PFileInfo;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/16.
+ * Created by zeus on 2016/9/16.
  */
 public class ImageSelectAdapter
     extends

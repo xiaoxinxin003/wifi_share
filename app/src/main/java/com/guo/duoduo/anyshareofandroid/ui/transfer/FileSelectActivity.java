@@ -26,7 +26,7 @@ import com.guo.duoduo.anyshareofandroid.utils.ToastUtils;
 
 
 /**
- * Created by 郭攀峰 on 2015/9/15.
+ * Created by zeus.
  */
 public class FileSelectActivity extends BaseActivity implements OnSelectItemClickListener
 {
