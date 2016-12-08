@@ -161,7 +161,7 @@ public class AccessPointManager extends WifiManagerWrap
      * 
      * @return WifiConfiguration
      */
-    private WifiConfiguration getWifiApConfiguration()
+    public WifiConfiguration getWifiApConfiguration()
     {
         try
         {
