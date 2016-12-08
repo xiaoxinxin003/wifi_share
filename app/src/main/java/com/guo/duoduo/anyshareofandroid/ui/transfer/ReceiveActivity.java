@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import com.guo.duoduo.anyshareofandroid.MyApplication;
 import com.guo.duoduo.anyshareofandroid.R;
 import com.guo.duoduo.anyshareofandroid.constant.Constant;
+import com.guo.duoduo.anyshareofandroid.manager.CustomWifiManager;
 import com.guo.duoduo.anyshareofandroid.sdk.accesspoint.AccessPointManager;
 import com.guo.duoduo.anyshareofandroid.sdk.cache.Cache;
 import com.guo.duoduo.anyshareofandroid.ui.common.BaseActivity;
@@ -46,11 +48,15 @@ import com.guo.duoduo.randomtextview.RandomTextView;
 import com.guo.duoduo.rippleoutlayout.RippleOutLayout;
 import com.guo.duoduo.rippleoutview.RippleView;
 
-
-public class ReceiveActivity extends BaseActivity
-    implements
-        AccessPointManager.OnWifiApStateChangeListener
-{
+/**
+ * receiver 逻辑：
+ * 1、当前在正确的热点中
+ * 2、当前不在正确热点中
+ *  2.1扫描附近WiFi信息，展示可接入的热点。
+ *  目前逻辑：如果在热点中不做操作，如果不在，判断WiFi状态，打开WiFi，扫描热点，接入热点。
+ *  现在接入热点存在问题。
+ */
+public class ReceiveActivity extends BaseActivity implements AccessPointManager.OnWifiApStateChangeListener {
 
     private static final String tag = ReceiveActivity.class.getSimpleName();
 
@@ -81,7 +87,7 @@ public class ReceiveActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
-
+        mWifiReceiver = new WifiReceiver();
         init();
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_receive_toolbar);
         setSupportActionBar(toolbar);
@@ -137,10 +143,21 @@ public class ReceiveActivity extends BaseActivity
 //        intWifiHotSpot();
 
 //        connectToHotSpot();
+        if (mWifiApManager.isWifiApEnabled()){
+            CustomWifiManager.getInstance().setWifiApEnabled(mWifiManager, false);
+        }
+        WifiInfo info = mWifiManager.getConnectionInfo();
+        if (info != null && info.getSSID().contains("zeus")){
 
-        connectToHotpot();
+        }else if (info != null && !info.getSSID().contains("zeus")){
+            connectToHotpot();
+        }else {
+            if (!mWifiManager.isWifiEnabled()){
+                mWifiManager.setWifiEnabled(true);
+            }
+            connectToHotpot();
+        }
 
-        //TODO 连接到正确的热点后再开始初始化。
         initP2P();
     }
 
@@ -202,7 +219,7 @@ public class ReceiveActivity extends BaseActivity
         mPassableHotsPot =new ArrayList<String>();
         for(ScanResult result:wifiList){
             System.out.println(result.SSID);
-            if((result.SSID).contains("YRCCONNECTION"))
+            if((result.SSID).contains("zeus"))
                 mPassableHotsPot.add(result.SSID);
         }
         synchronized (this) {
@@ -220,36 +237,10 @@ public class ReceiveActivity extends BaseActivity
     public void connectToHotpot(){
         if(mPassableHotsPot ==null || mPassableHotsPot.size()==0)
             return;
-        WifiConfiguration wifiConfig=this.setWifiParams(mPassableHotsPot.get(0));
+        WifiConfiguration wifiConfig = new WifiConfiguration();
+        wifiConfig.SSID = mPassableHotsPot.get(0);
         int wcgID = mWifiManager.addNetwork(wifiConfig);
-        // 网络连接列表
-        boolean flag=mWifiManager.enableNetwork(wcgID, true);
-        if (!mPassableHotsPot.contains("YRCCONNECTION")){
-            mWifiManager.disconnect();
-            mWifiManager.enableNetwork(wcgID, true);
-            mWifiManager.saveConfiguration();
-            mWifiManager.reconnect();
-        }
-        String currentBssid = mWifiManager.getConnectionInfo().getBSSID();
-        if (currentBssid != null && currentBssid.contains("YRCCONNECTION")){
-            mIsConnected = true;
-            initP2P();
-        }
-        System.out.println("connect success? "+mIsConnected);
-    }
-
-    private void connectToHotSpot() {
-        if (NetworkUtils.isWifiConnected(this)){
-            if (mWifiManager.getConnectionInfo().getSSID().contains("闪电")){
-                //不需要操作，
-
-            }else {
-                mWifiManager.disconnect();
-
-            }
-        }else {
-
-        }
+        mWifiManager.enableNetwork(wcgID, true);
     }
 
     private void initP2P()
