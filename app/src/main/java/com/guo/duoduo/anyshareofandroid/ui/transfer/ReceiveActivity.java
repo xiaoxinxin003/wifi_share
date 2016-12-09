@@ -87,8 +87,10 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
-        mWifiReceiver = new WifiReceiver();
-        init();
+        mWifiReceiver = new WifiReceiver();mWifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
+        mWifiApManager = new AccessPointManager(MyApplication.getInstance());
+        mWifiManager.startScan();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_receive_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -161,11 +163,6 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
         initP2P();
     }
 
-    private void init() {
-        mWifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
-        mWifiManager.startScan();
-    }
-
     private void initView() {
         TextView radar_scan_name = (TextView) findViewById(R.id.activity_receive_scan_name);
         radar_scan_name.setText(alias);
@@ -235,12 +232,19 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
 
     /*连接到热点*/
     public void connectToHotpot(){
-        if(mPassableHotsPot ==null || mPassableHotsPot.size()==0)
-            return;
-        WifiConfiguration wifiConfig = new WifiConfiguration();
-        wifiConfig.SSID = mPassableHotsPot.get(0);
-        int wcgID = mWifiManager.addNetwork(wifiConfig);
-        mWifiManager.enableNetwork(wcgID, true);
+        List<ScanResult> results = mWifiManager.getScanResults();
+        for (ScanResult result : results){
+            if (result.SSID.contains("zeus")){
+                WifiConfiguration wifiConfig = new WifiConfiguration();
+                wifiConfig.SSID = result.SSID;
+                wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                wifiConfig.wepTxKeyIndex = 0;
+                int wcgID = mWifiManager.addNetwork(wifiConfig);
+                mWifiManager.enableNetwork(wcgID, true);
+                break;
+            }
+        }
+
     }
 
     private void initP2P()
@@ -391,7 +395,7 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
         progressDialog.setMessage(getString(R.string.wifi_hotspot_creating));
         progressDialog.show();
 
-        mWifiApManager = new AccessPointManager(MyApplication.getInstance());
+
         mWifiApManager.setWifiApStateChangeListener(this);
         createAccessPoint();
     }
