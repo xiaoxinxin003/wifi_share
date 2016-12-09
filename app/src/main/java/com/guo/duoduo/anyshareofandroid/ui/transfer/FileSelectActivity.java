@@ -108,7 +108,7 @@ public class FileSelectActivity extends BaseActivity implements OnSelectItemClic
     private void onSendFileBtnClick() {
         //TODO 是否已经在可用热点中，是的话扫描就直接显示、发送，否则创建热点。
         if (NetworkUtils.isWifiConnected(this)){
-            if (mWifiManager.getConnectionInfo().getSSID().contains("闪电")){
+            if (mWifiManager.getConnectionInfo().getSSID().contains("zeus")){
                 //直接扫描就可以了
             }else {
                 mWifiManager.setWifiEnabled(false);
@@ -118,7 +118,7 @@ public class FileSelectActivity extends BaseActivity implements OnSelectItemClic
             if (mWifiApManager.isWifiApEnabled()){
                 WifiConfiguration apConfig = mWifiApManager.getWifiApConfiguration();
                 String ssid = apConfig.SSID;
-                if (ssid != null && ssid.contains("闪电")){
+                if (ssid != null && ssid.contains("zeus")){
 
                 }
             }else {

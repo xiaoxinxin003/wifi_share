@@ -50,7 +50,7 @@ public class WifiListActivity extends BaseActivity implements AdapterView.OnItem
     private void initNearbyWifiData() {
         List<ScanResult> results = mWifiManager.getScanResults();
         for (ScanResult result : results){
-            if (result.SSID.contains("闪电")){
+            if (result.SSID.contains("zeus")){
                 mNearbyWifiList.add(result);
             }
         }

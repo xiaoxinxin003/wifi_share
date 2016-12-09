@@ -46,7 +46,7 @@ public class CustomWifiManager {
             //热点的配置类
             WifiConfiguration apConfig = new WifiConfiguration();
             //配置热点的名称(可以在名字后面加点随机数什么的)
-            apConfig.SSID = "闪电YRCCONNECTION";
+            apConfig.SSID = "zeusYRCCONNECTION";
             //配置热点的密码
             apConfig.preSharedKey="12122112";
             //通过反射调用设置热点
