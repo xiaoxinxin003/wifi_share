@@ -129,30 +129,13 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
 
         registReceiver();
 
-//        if (!NetworkUtils.isWifiConnected(MyApplication.getInstance()))
-//        { //create wifi hot spot
-//            Log.d(tag, "no WiFi init wifi hotspot");
-//            intWifiHotSpot();
-//        }
-//        else
-//        {
-//            Log.d(tag, "useWiFi");
-//            wifiName.setText(String.format(getString(R.string.send_connect_to),
-//                NetworkUtils.getCurrentSSID(ReceiveActivity.this)));
-//        }
-
-
-//        intWifiHotSpot();
-
-//        connectToHotSpot();
+        //我要接收，关闭热点
         if (mWifiApManager.isWifiApEnabled()){
             CustomWifiManager.getInstance().setWifiApEnabled(mWifiManager, false);
         }
         WifiInfo info = mWifiManager.getConnectionInfo();
         if (info != null && info.getSSID().contains("zeus")){
 
-        }else if (info != null && !info.getSSID().contains("zeus")){
-            connectToHotpot();
         }else {
             if (!mWifiManager.isWifiEnabled()){
                 mWifiManager.setWifiEnabled(true);
@@ -160,7 +143,7 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
             connectToHotpot();
         }
 
-        initP2P();
+//        initP2P();
     }
 
     private void initView() {
@@ -221,13 +204,7 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
         }
         synchronized (this) {
             connectToHotpot();
-//            showWifiAp(mPassableHotsPot);
         }
-    }
-
-    private void showWifiAp(List<String> mPassableHotsPot) {
-        //TODO 获取附近的小伙伴。
-
     }
 
     /*连接到热点*/
@@ -247,34 +224,28 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
 
     }
 
-    private void initP2P()
-    {
+    private void initP2P() {
         mP2PManager = new P2PManager(getApplicationContext());
         P2PNeighbor melonInfo = new P2PNeighbor();
         melonInfo.alias = alias;
         String ip = null;
-        try
-        {
+        try {
             ip = AccessPointManager.getLocalIpAddress();
         }
-        catch (UnknownHostException e)
-        {
+        catch (UnknownHostException e) {
             e.printStackTrace();
         }
         if (TextUtils.isEmpty(ip))
             ip = NetworkUtils.getLocalIp(getApplicationContext());
         melonInfo.ip = ip;
 
-        mP2PManager.start(melonInfo, new Melon_Callback()
-        {
+        mP2PManager.start(melonInfo, new Melon_Callback() {
             @Override
-            public void Melon_Found(P2PNeighbor melon)
-            {
+            public void Melon_Found(P2PNeighbor melon) {
             }
 
             @Override
-            public void Melon_Removed(P2PNeighbor melon)
-            {
+            public void Melon_Removed(P2PNeighbor melon) {
             }
         });
 
