@@ -151,7 +151,6 @@ public class FileSelectActivity extends BaseActivity implements OnSelectItemClic
     }
 
     private void intWifiHotSpot() {
-
         mWifiApManager.setWifiApStateChangeListener(this);
         createAccessPoint();
     }

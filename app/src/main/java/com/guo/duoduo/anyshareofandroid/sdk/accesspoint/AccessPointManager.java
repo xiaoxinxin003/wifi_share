@@ -1,6 +1,9 @@
 package com.guo.duoduo.anyshareofandroid.sdk.accesspoint;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,6 +11,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import android.content.BroadcastReceiver;
@@ -16,10 +20,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.guo.duoduo.anyshareofandroid.constant.Constant;
 import com.guo.duoduo.anyshareofandroid.utils.DeviceUtils;
+import com.guo.duoduo.p2pmanager.p2pinterface.Handler;
 
 
 public class AccessPointManager extends WifiManagerWrap
@@ -452,6 +460,57 @@ public class AccessPointManager extends WifiManagerWrap
          * @param state wifi state now
          */
         public void onWifiStateChanged(int state);
+    }
+
+    /**
+     * Gets a list of the clients connected to the Hotspot, reachable timeout is 300
+     * @param onlyReachables {@code false} if the list should contain unreachable (probably disconnected) clients, {@code true} otherwise
+     * @return ArrayList of {@link ClientScanResult}
+     */
+    public ArrayList<ClientScanResult> getClientList(boolean onlyReachables) {
+        return getClientList(onlyReachables, 300);
+    }
+
+    /**
+     * Gets a list of the clients connected to the Hotspot
+     * @param onlyReachables {@code false} if the list should contain unreachable (probably disconnected) clients, {@code true} otherwise
+     * @param reachableTimeout Reachable Timout in miliseconds
+     * @return ArrayList of {@link ClientScanResult}
+     */
+    public ArrayList<ClientScanResult> getClientList(final boolean onlyReachables, final int reachableTimeout) {
+        BufferedReader br = null;
+        ArrayList<ClientScanResult> result = null;
+        try {
+            result = new ArrayList<ClientScanResult>();
+            br = new BufferedReader(new FileReader("/proc/net/arp"));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                final String[] splitted = line.split(" +");
+
+                if ((splitted != null) && (splitted.length >= 4)) {
+                    // Basic sanity check
+                    String mac = splitted[3];
+
+                    if (mac.matches("..:..:..:..:..:..")) {
+                            boolean isReachable = InetAddress.getByName(splitted[0]).isReachable(reachableTimeout);
+                            if (!onlyReachables || isReachable) {
+                                result.add(new ClientScanResult(splitted[0], splitted[3], splitted[5], isReachable));
+                            }
+                        }
+                }
+            }
+        } catch (Exception e) {
+            System.out.print(e.toString());
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                System.out.print(e.toString());
+            }
+        }
+
+        return result;
     }
 
 }

@@ -13,6 +13,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -25,9 +27,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.guo.duoduo.anyshareofandroid.MyApplication;
 import com.guo.duoduo.anyshareofandroid.R;
 import com.guo.duoduo.anyshareofandroid.sdk.accesspoint.AccessPointManager;
+import com.guo.duoduo.anyshareofandroid.sdk.accesspoint.ClientScanResult;
 import com.guo.duoduo.anyshareofandroid.sdk.cache.Cache;
 import com.guo.duoduo.anyshareofandroid.ui.common.BaseActivity;
 import com.guo.duoduo.anyshareofandroid.ui.transfer.view.FileTransferAdapter;
@@ -54,9 +59,12 @@ public class RadarScanActivity extends BaseActivity
 
     private WifiReceiver mWifiReceiver;
 
+    private AccessPointManager mWifiApManager;
+
     private P2PManager p2PManager;
     private String alias;
     private RelativeLayout scanRelative;
+    private TextView mClientDevices;
     private RelativeLayout scanRocket;
     private ListView fileSendListView;
     private List<P2PNeighbor> neighbors = new ArrayList<>();
@@ -69,6 +77,8 @@ public class RadarScanActivity extends BaseActivity
         setContentView(R.layout.activity_radarscan);
 
         mWifiReceiver = new WifiReceiver();
+
+        mWifiApManager = new AccessPointManager(MyApplication.getInstance());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_radar_toolbar);
         setSupportActionBar(toolbar);
@@ -109,6 +119,9 @@ public class RadarScanActivity extends BaseActivity
         scanRocket = (RelativeLayout) findViewById(R.id.activity_radar_rocket_layout);
         scanRocket.setVisibility(View.GONE);
 
+        mClientDevices = (TextView)findViewById(R.id.tv_client_devices);
+        mClientDevices.setVisibility(View.GONE);
+
         fileSendListView = (ListView) findViewById(R.id.activity_radar_scan_listview);
         fileSendListView.setVisibility(View.GONE);
 
@@ -132,13 +145,50 @@ public class RadarScanActivity extends BaseActivity
                 });
 
         initP2P();
+
+        new Thread(scanTask).start();
+    }
+
+    Runnable scanTask = new Runnable() {
+        @Override
+        public void run() {
+            ArrayList<ClientScanResult> results = mWifiApManager.getClientList(true);
+            String devices;
+            if (results != null){
+                devices = String.valueOf(results.size());
+            }else{
+                devices = "null";
+            }
+            Message msg =  new Message();
+            Bundle data = new Bundle();
+            data.putString("devices", devices);
+            msg.setData(data);
+            handler.sendMessage(msg);
+        }
+    };
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String counts = data.getString("devices");
+            initClientDevicesCount(counts);
+        }
+    };
+
+    private void initClientDevicesCount(String clients) {
+        if (!TextUtils.equals(clients, "null")){
+            mClientDevices.setText(clients);
+            mClientDevices.setVisibility(View.VISIBLE);
+        }
     }
 
     private void registReceiver() {
         // 注册Receiver
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        filter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(mWifiReceiver, filter);
     }
 
@@ -147,8 +197,10 @@ public class RadarScanActivity extends BaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
            switch (intent.getAction()){
-               case WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION:
+               case WifiManager.WIFI_STATE_CHANGED_ACTION:
                    initP2P();
+                   break;
+               case WifiManager.NETWORK_STATE_CHANGED_ACTION:
                    break;
            }
         }
@@ -260,8 +312,10 @@ public class RadarScanActivity extends BaseActivity
             @Override
             public void Melon_Found(P2PNeighbor melon) {
                 if (melon != null) {
-                    if (!neighbors.contains(melon))
+                    if (!neighbors.contains(melon)){
                         neighbors.add(melon);
+                    }
+                    new Thread(scanTask).start();
                     randomTextView.addKeyWord(melon.alias);
                     randomTextView.show();
                 }

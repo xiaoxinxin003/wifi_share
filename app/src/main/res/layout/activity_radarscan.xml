@@ -26,15 +26,32 @@
         android:layout_height="match_parent"
         android:layout_gravity="center">
 
+
+
         <RelativeLayout
             android:id="@+id/activity_radar_scan_relative"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center">
 
+            <TextView
+                android:id="@+id/tv_client_devices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="1dp"
+                android:paddingLeft="1dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="60dp"
+                android:textSize="15sp"
+                />
+
             <com.guo.duoduo.library.RadarScanView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></com.guo.duoduo.library.RadarScanView>
+                android:layout_height="match_parent">
+            </com.guo.duoduo.library.RadarScanView>
 
             <TextView
                 android:id="@+id/activity_radar_scan_name"
@@ -48,14 +65,16 @@
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:layout_centerInParent="true"
-                android:background="@color/transparent"></com.guo.duoduo.randomtextview.RandomTextView>
+                android:background="@color/transparent">
+            </com.guo.duoduo.randomtextview.RandomTextView>
         </RelativeLayout>
 
         <ListView
             android:id="@+id/activity_radar_scan_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"></ListView>
+            android:layout_marginTop="?attr/actionBarSize">
+        </ListView>
 
         <RelativeLayout
             android:id="@+id/activity_radar_rocket_layout"
