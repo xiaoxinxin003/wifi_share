@@ -127,7 +127,7 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
 
         initView();
 
-        registReceiver();
+//        registReceiver();
 
         //我要接收，关闭热点
         if (mWifiApManager.isWifiApEnabled()){
@@ -143,7 +143,7 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
             connectToHotpot();
         }
 
-//        initP2P();
+        initP2P();
     }
 
     private void initView() {
@@ -209,6 +209,10 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
 
     /*连接到热点*/
     public void connectToHotpot(){
+        WifiInfo info = mWifiManager.getConnectionInfo();
+        if (info != null && info.getSSID().contains("zeus")){
+            return;
+        }
         List<ScanResult> results = mWifiManager.getScanResults();
         for (ScanResult result : results){
             if (result.SSID.contains("zeus")){
@@ -218,6 +222,7 @@ public class ReceiveActivity extends BaseActivity implements AccessPointManager.
                 wifiConfig.wepTxKeyIndex = 0;
                 int wcgID = mWifiManager.addNetwork(wifiConfig);
                 mWifiManager.enableNetwork(wcgID, true);
+
                 break;
             }
         }

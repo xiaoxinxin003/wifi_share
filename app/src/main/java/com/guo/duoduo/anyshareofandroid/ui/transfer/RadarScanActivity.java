@@ -144,9 +144,9 @@ public class RadarScanActivity extends BaseActivity
                     }
                 });
 
-        initP2P();
-
         new Thread(scanTask).start();
+
+        initP2P();
     }
 
     Runnable scanTask = new Runnable() {

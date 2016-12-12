@@ -53,7 +53,7 @@
             android:name=".ui.setting.FileBrowseActivity"
             android:label="@string/menu_history">
         </activity>
-        <activity android:name=".ui.transfer.WifiListActivity"
+        <activity android:name=".ui.transfer.view.ScanApActivity"
             android:label="@string/menu_guys"
             android:theme="@style/AppTheme">
         </activity>

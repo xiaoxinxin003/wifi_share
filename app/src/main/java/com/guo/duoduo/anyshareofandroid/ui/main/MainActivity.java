@@ -20,6 +20,7 @@ import com.guo.duoduo.anyshareofandroid.ui.setting.AboutActivity;
 import com.guo.duoduo.anyshareofandroid.ui.setting.FileBrowseActivity;
 import com.guo.duoduo.anyshareofandroid.ui.transfer.FileSelectActivity;
 import com.guo.duoduo.anyshareofandroid.ui.transfer.ReceiveActivity;
+import com.guo.duoduo.anyshareofandroid.ui.transfer.view.ScanApActivity;
 import com.guo.duoduo.anyshareofandroid.utils.PreferenceUtils;
 import com.guo.duoduo.httpserver.ui.Send2PCActivity;
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             case R.id.activity_main_i_receive :
                 Cache.selectedList.clear();
-                startActivity(new Intent(MainActivity.this, ReceiveActivity.class)
+                startActivity(new Intent(MainActivity.this, ScanApActivity.class)
                         .putExtra("name", nameEdit.getText().toString()));
                 break;
             case R.id.activity_main_i_send :
