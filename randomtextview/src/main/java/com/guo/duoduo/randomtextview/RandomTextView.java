@@ -37,11 +37,20 @@ public class RandomTextView extends FrameLayout
 
     private Random random;
     private Vector<String> vecKeywords;
+    private int mPosition;
     private int width;
     private int height;
     private int mode = RippleView.MODE_OUT;
     private int fontColor = 0xff0000ff;
     private int shadowColor = 0xdd696969;
+
+    public void setPosition(int position) {
+        this.mPosition = position;
+    }
+
+    public int getPosition(){
+        return mPosition;
+    }
 
     public interface OnRippleViewClickListener
     {

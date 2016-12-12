@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,6 +66,16 @@ public class ScanApActivity extends BaseActivity implements AccessPointManager.O
         mWifiReceiver = new WifiReceiver();mWifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
         mWifiApManager = new AccessPointManager(MyApplication.getInstance());
 
+        WifiInfo info = mWifiManager.getConnectionInfo();
+        if (info != null && info.getSSID().contains("zeus")){
+        }else {
+            if (mWifiManager.isWifiEnabled()){
+                mWifiManager.setWifiEnabled(false);
+                mWifiManager.setWifiEnabled(true);
+            }else {
+                mWifiManager.setWifiEnabled(true);
+            }
+        }
         registReceiver();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_scan_ap_toolbar);
@@ -103,7 +114,9 @@ public class ScanApActivity extends BaseActivity implements AccessPointManager.O
 
         initView();
 
-        mWifiManager.startScan();
+        if (mWifiManager.isWifiEnabled()){
+            mWifiManager.startScan();
+        }
 
     }
 
@@ -126,7 +139,12 @@ public class ScanApActivity extends BaseActivity implements AccessPointManager.O
                     public void onRippleViewClicked(View view)
                     {
                         //点击了热点，去连接，连接成功跳转到哪里？
-                        ToastUtils.showTextToast(getApplicationContext(), "连接到：");
+                        if (mPassableHotsPot == null){
+                            return;
+                        }
+                        int position = randomTextView.getPosition();
+                        connect2Ap(mPassableHotsPot.get(position));
+//                        ToastUtils.showTextToast(getApplicationContext(), "连接到：" + mPassableHotsPot.get(position));
                     }
                 });
     }
@@ -159,14 +177,15 @@ public class ScanApActivity extends BaseActivity implements AccessPointManager.O
 
     /*当搜索到新的wifi热点时判断该热点是否符合规格*/
     public void onReceiveNewNetworks(List<ScanResult> wifiList){
-
-
         mPassableHotsPot =new ArrayList<String>();
-        for(ScanResult result:wifiList){
+        int postion = 0;
+        for( int i = 0; i < wifiList.size(); i++){
+            ScanResult result = wifiList.get(i);
             System.out.println(result.SSID);
             if((result.SSID).contains("zeus")){
                 mPassableHotsPot.add(result.SSID);
                 randomTextView.addKeyWord(result.SSID);
+                randomTextView.setPosition(postion++);
                 randomTextView.show();
             }
         }
@@ -180,6 +199,9 @@ public class ScanApActivity extends BaseActivity implements AccessPointManager.O
         if (mPassableHotsPot == null || mPassableHotsPot.size() == 0){
             //附近没有任何WiFi可用（符合的不符合的都没有）
             rippleOutLayout.setVisibility(View.GONE);
+            receiveLayout.clearAnimation();
+            mPassableHotsPot = null;
+            mWifiList = null;
             findViewById(R.id.activity_scan_ap_none).setVisibility(View.VISIBLE);
             return;
         }
@@ -206,6 +228,20 @@ public class ScanApActivity extends BaseActivity implements AccessPointManager.O
             }
         }
 
+    }
+
+    public void connect2Ap(String ssid){
+        WifiInfo info = mWifiManager.getConnectionInfo();
+        if (info != null && TextUtils.equals(info.getSSID(), ssid)){
+            ToastUtils.showTextToast(getApplicationContext(), "已连接");
+            return;
+        }
+        WifiConfiguration wifiConfig = new WifiConfiguration();
+        wifiConfig.SSID = ssid;
+        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        wifiConfig.wepTxKeyIndex = 0;
+        int wcgID = mWifiManager.addNetwork(wifiConfig);
+        mWifiManager.enableNetwork(wcgID, true);
     }
 
     @Override
